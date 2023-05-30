@@ -26,7 +26,7 @@ export default {
 
     <div class="cards">
       <div class="titoloCards">Found 40 cards</div>
-      <div v-for="c, i in store.carte " class="card">
+      <div v-for="c, i in store.carte" class="card">
         <img :src="store.carte[i].card_images[0].image_url" alt="">
         <span>{{ store.carte[i].name }}</span>
         <div>{{ store.carte[i].archetype }}</div>
@@ -64,13 +64,14 @@ export default {
 }
 
 .cards {
-  width: 90%;
+  width: 85%;
   min-height: 90%;
   background-color: #ffffff;
-  padding: 2rem;
+  padding: 2rem 4rem;
   display: flex;
   flex-wrap: wrap;
-  gap: 0.9rem;
+  justify-content: space-between;
+  gap: 2rem;
 }
 
 .titoloCards {
