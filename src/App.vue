@@ -16,10 +16,12 @@ export default {
   },
   mounted() {
 
-    axios.get("https://db.ygoprodeck.com/api/v7/cardinfo.php?num=40&offset=0").then(result => {
+    axios.get("https://db.ygoprodeck.com/api/v7/cardinfo.php").then(result => {
       const risulataato = result.data;
       console.log("chiama");
       this.store.carte = risulataato.data;
+    }).catch(err => {
+      this.store.carte = {};
     });
   }
 

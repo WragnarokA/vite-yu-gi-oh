@@ -1,19 +1,52 @@
 <script >
 import { store } from '../data/store';
+import axios from 'axios';
+
 
 export default {
-  name: "ma",
+  name: "AppMain",
+  components: {
+
+  },
   data() {
     return {
-      store
+      store,
+      opzioniSelezionabili: [
+        "Alien",
+        "ABC",
+        "@Ignister"
+      ],
+      archetypeScelto: "Alien"
+
 
     }
   },
   methods: {
-    printData() {
+    printCarte() {
+      let indirizzo = "https://db.ygoprodeck.com/api/v7/cardinfo.php"
+      if (this.archetypeScelto == "Alien") {
+        indirizzo += "?archetype=Alien"
+      } else if (this.archetypeScelto == "ABC") {
+        indirizzo += "?archetype=ABC"
+      } else {
+        indirizzo += "?archetype=@Ignister"
+      };
+      axios.get(indirizzo).then(result => {
+        const risulataato = result.data;
+        this.store.carte = risulataato.data;
+      }).catch(err => {
+        this.store.carte = {};
+      });
 
     }
+  },
+  computed: {
+    filtraCarte() {
+      return this.store.carte.slice(0, 40)
+    }
   }
+
+
 }    
 </script>
 
@@ -22,11 +55,16 @@ export default {
     <img src="../assets/Screenshot 2023-05-29 015107.png" alt="">
     <h1>Yu-Gi-Oh Api</h1>
   </div>
+
   <div class="container">
+
+    <select @click="printCarte" v-model="archetypeScelto" class="selezionaCarte">
+      <option v-for="opzione in opzioniSelezionabili">{{ opzione }}</option>
+    </select>
 
     <div class="cards">
       <div class="titoloCards">Found 40 cards</div>
-      <div v-for="c, i in store.carte" class="card">
+      <div v-for="c, i in filtraCarte" class="card">
         <img :src="store.carte[i].card_images[0].image_url" alt="">
         <span>{{ store.carte[i].name }}</span>
         <div>{{ store.carte[i].archetype }}</div>
@@ -60,7 +98,18 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 
+}
+
+.selezionaCarte {
+  width: 8rem;
+  border-radius: 5px;
+  padding: 0.3rem;
+  border: none;
+  position: absolute;
+  top: 0.7rem;
+  left: 8rem;
 }
 
 .cards {
@@ -68,6 +117,7 @@ export default {
   min-height: 90%;
   background-color: #ffffff;
   padding: 2rem 4rem;
+  margin: 3rem;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
